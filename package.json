@@ -1,22 +1,43 @@
 {
-  "name": "vue-project",
-  "version": "0.0.0",
-  "private": true,
-  "type": "module",
-  "engines": {
-    "node": "^20.19.0 || >=22.12.0"
+  "author": "Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me)",
+  "name": "which",
+  "description": "Like which(1) unix command. Find the first instance of an executable in the PATH.",
+  "version": "2.0.2",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/isaacs/node-which.git"
   },
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+  "main": "which.js",
+  "bin": {
+    "node-which": "./bin/node-which"
   },
+  "license": "ISC",
   "dependencies": {
-    "vue": "^3.5.22"
+    "isexe": "^2.0.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.1",
-    "vite": "^7.1.7",
-    "vite-plugin-vue-devtools": "^8.0.2"
+    "mkdirp": "^0.5.0",
+    "rimraf": "^2.6.2",
+    "tap": "^14.6.9"
+  },
+  "scripts": {
+    "test": "tap",
+    "preversion": "npm test",
+    "postversion": "npm publish",
+    "prepublish": "npm run changelog",
+    "prechangelog": "bash gen-changelog.sh",
+    "changelog": "git add CHANGELOG.md",
+    "postchangelog": "git commit -m 'update changelog - '${npm_package_version}",
+    "postpublish": "git push origin --follow-tags"
+  },
+  "files": [
+    "which.js",
+    "bin/node-which"
+  ],
+  "tap": {
+    "check-coverage": true
+  },
+  "engines": {
+    "node": ">= 8"
   }
 }

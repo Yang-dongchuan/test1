@@ -1,38 +1,54 @@
-# vue-project
+# which
 
-This template should help get you started developing with Vue 3 in Vite.
+Like the unix `which` utility.
 
-## Recommended IDE Setup
+Finds the first instance of a specified executable in the PATH
+environment variable.  Does not cache the results, so `hash -r` is not
+needed when the PATH changes.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## USAGE
 
-## Recommended Browser Setup
+```javascript
+var which = require('which')
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd) 
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+// async usage
+which('node', function (er, resolvedPath) {
+  // er is returned if no "node" is found on the PATH
+  // if it is found, then the absolute path to the exec is returned
+})
 
-## Customize configuration
+// or promise
+which('node').then(resolvedPath => { ... }).catch(er => { ... not found ... })
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+// sync usage
+// throws if not found
+var resolved = which.sync('node')
 
-## Project Setup
+// if nothrow option is used, returns null if not found
+resolved = which.sync('node', {nothrow: true})
 
-```sh
-npm install
+// Pass options to override the PATH and PATHEXT environment vars.
+which('node', { path: someOtherPath }, function (er, resolved) {
+  if (er)
+    throw er
+  console.log('found at %j', resolved)
+})
 ```
 
-### Compile and Hot-Reload for Development
+## CLI USAGE
 
-```sh
-npm run dev
+Same as the BSD `which(1)` binary.
+
+```
+usage: which [-as] program ...
 ```
 
-### Compile and Minify for Production
+## OPTIONS
 
-```sh
-npm run build
-```
+You may pass an options object as the second argument.
+
+- `path`: Use instead of the `PATH` environment variable.
+- `pathExt`: Use instead of the `PATHEXT` environment variable.
+- `all`: Return all matches, instead of just the first one.  Note that
+  this means the function returns an array of strings instead of a
+  single string.
